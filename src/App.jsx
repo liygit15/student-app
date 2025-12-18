@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import StudentList from './components/StudentList';
 import ClassInfo from './components/ClassInfo';
+import NewStudentForm from './components/NewStudentForm';
 
 function App() {
   const [studentData, setStudentData] = useState([
@@ -45,14 +46,40 @@ function App() {
     setStudentData(students);
   };
 
+  // function to delete all student data
+  const deleteStudents = () => {
+    setStudentData([]);
+  };
+
+  const addStudentData = (newStudent) => {
+        // Logic to generate the next valid student ID
+        const nextId = Math.max(0, ...studentData.map((student) => student.id)) + 1;
+
+        // Duplicate the student list
+        const newStudentList = [...studentData];
+
+        newStudentList.push({
+            id: nextId,
+            nameData: newStudent.nameData,
+            emailData: newStudent.emailData,
+            isPresentData: false,
+        });
+
+        setStudentData(newStudentList);
+    };
+    
   return (
     <main>
       <h1>Attendance</h1>
       <ClassInfo memberCount={studentData.length}></ClassInfo>
+      <button onClick={() => deleteStudents()}>Delete All Students!</button>
       <StudentList
         students={studentData}
         onStudentPresenceToggle={toggleStudentPresence}
       ></StudentList>
+      <NewStudentForm
+        onStudentAdd={addStudentData}
+      ></NewStudentForm>
     </main>
   );
 }
